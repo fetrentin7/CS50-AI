@@ -3,6 +3,7 @@ Tic Tac Toe Player
 """
 
 import math
+from copy import deepcopy
 
 X = "X"
 O = "O"
@@ -47,8 +48,8 @@ def actions(board):
 
     moves = set()
 
-    for row in board:
-        for column in row:
+    for row in range(3):
+        for column in range(3):
             if board[row][column] is EMPTY:
                 moves.add((row, column))
 
@@ -58,8 +59,40 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    raise NotImplementedError
+    new_board = deepcopy(board)
 
+    if action not in actions(board):
+        raise Exception("Empty")
+
+    i, j = action
+    new_board[i][j] = player(board)
+    return new_board
+
+def checkColumn(board):
+
+    for column in range(3):
+        if board[0][column] == board[1][column] == board[2][column] != EMPTY:
+            return [0][column]
+
+    return None
+
+def checkLine(board):
+
+    for row in range(3):
+        if board[row][0] == board[row][1] == board[row][2] != EMPTY:
+            return [row][1]
+
+    return None
+
+def checkDiagonal(board):
+
+    if board[0][0] == board[1][1] == board[2][2] != EMPTY:
+       return [0][0]
+
+    if board[0][2] == board[1][1] == board[2][0] != EMPTY:
+       return [0][2]
+
+    return None
 
 def winner(board):
     """
@@ -72,8 +105,7 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    raise NotImplementedError
-
+    print(board)
 
 def utility(board):
     """
