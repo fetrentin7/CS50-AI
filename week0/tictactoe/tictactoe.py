@@ -129,20 +129,22 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
+    if terminal(board):
+        return utility(board)
 
 def min_value(board):
 
     value_min = +math.inf
     for action in actions(board):
-        eval_min = min_value(board)
         value_min = min(value_min, max_value(result(board, action)))
 
     return value_min
 
 def max_value(board):
+
     value_max = -math.inf
+
     for action in actions(board):
-        eval_max = max_value(board)
         value_max = max(value_max, min(result(board, action)))
 
     return value_max
