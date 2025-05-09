@@ -39,13 +39,10 @@ def player(board):
     else:
         return O
 
-
-
 def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
     """
-
     moves = set()
 
     for row in range(3):
@@ -132,4 +129,20 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+
+def min_value(board):
+
+    value_min = +math.inf
+    for action in actions(board):
+        eval_min = min_value(board)
+        value_min = min(value_min, max_value(result(board, action)))
+
+    return value_min
+
+def max_value(board):
+    value_max = -math.inf
+    for action in actions(board):
+        eval_max = max_value(board)
+        value_max = max(value_max, min(result(board, action)))
+
+    return value_max
