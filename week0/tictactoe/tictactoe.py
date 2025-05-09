@@ -69,7 +69,7 @@ def checkColumn(board):
 
     for column in range(3):
         if board[0][column] == board[1][column] == board[2][column] != EMPTY:
-            return [0][column]
+            return board[0][column]
 
     return None
 
@@ -109,7 +109,7 @@ def terminal(board):
         for column in range(3):
             if board[row][column] == EMPTY:
                 return False
-    return False
+    return True
 
 def utility(board):
     """
@@ -126,25 +126,48 @@ def utility(board):
 
 
 def minimax(board):
-    """
-    Returns the optimal action for the current player on the board.
-    """
+    if terminal(board):
+        return None
+
+
+    current = player(board)
+
+    if current == X:
+        best_score = -math.inf
+        best_move = None
+        for action in actions(board):
+            score = min_value(result(board, action))
+            if score > best_score:
+                best_score = score
+                best_move = action
+        return best_move
+
+    else:
+        best_score = math.inf
+        best_move = None
+        for action in actions(board):
+            score = max_value(result(board, action))
+            if score < best_score:
+                best_score = score
+                best_move = action
+
+        return best_move
+
+
+def min_value(board):
     if terminal(board):
         return utility(board)
 
-def min_value(board):
-
-    value_min = +math.inf
-    for action in actions(board):
-        value_min = min(value_min, max_value(result(board, action)))
-
-    return value_min
+    v = math.inf
+    for a in actions(board):
+        v = min(v, max_value(result(board, a)))
+    return v
 
 def max_value(board):
+    if terminal(board):
+        return utility(board)
 
-    value_max = -math.inf
-
-    for action in actions(board):
-        value_max = max(value_max, min(result(board, action)))
-
-    return value_max
+    v = -math.inf
+    for a in actions(board):
+        v = max(v, min_value(result(board, a)))
+    return v
