@@ -72,7 +72,7 @@ def checkColumn(board):
             return board[0][column]
 
     return None
-
+#
 def checkLine(board):
 
     for row in range(3):
