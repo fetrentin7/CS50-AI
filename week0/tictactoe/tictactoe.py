@@ -39,6 +39,7 @@ def player(board):
     else:
         return O
 
+
 def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
@@ -51,6 +52,7 @@ def actions(board):
                 moves.add((row, column))
 
     return moves
+
 
 def result(board, action):
     """
@@ -65,31 +67,33 @@ def result(board, action):
     new_board[i][j] = player(board)
     return new_board
 
-def checkColumn(board):
 
+def checkColumn(board):
     for column in range(3):
         if board[0][column] == board[1][column] == board[2][column] != EMPTY:
             return board[0][column]
 
     return None
+
+
 #
 def checkLine(board):
-
     for row in range(3):
         if board[row][0] == board[row][1] == board[row][2] != EMPTY:
             return board[row][1]
 
     return None
 
-def checkDiagonal(board):
 
+def checkDiagonal(board):
     if board[0][0] == board[1][1] == board[2][2] != EMPTY:
-       return board[0][0]
+        return board[0][0]
 
     if board[0][2] == board[1][1] == board[2][0] != EMPTY:
-       return board[0][2]
+        return board[0][2]
 
     return None
+
 
 def winner(board):
     """
@@ -111,6 +115,7 @@ def terminal(board):
                 return False
     return True
 
+
 def utility(board):
     """
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
@@ -128,7 +133,6 @@ def utility(board):
 def minimax(board):
     if terminal(board):
         return None
-
 
     current = player(board)
 
@@ -162,6 +166,7 @@ def min_value(board):
     for a in actions(board):
         v = min(v, max_value(result(board, a)))
     return v
+
 
 def max_value(board):
     if terminal(board):
