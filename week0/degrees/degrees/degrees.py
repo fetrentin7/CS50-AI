@@ -1,7 +1,10 @@
 import csv
 import sys
 
+from numpy.matlib import empty
+
 from util import Node, StackFrontier, QueueFrontier
+from week0.tictactoe.tictactoe import actions, EMPTY
 
 # Maps names to a set of corresponding person_ids
 names = {}
@@ -92,8 +95,58 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+
+    queue = QueueFrontier()
+
+    visited_order = list()
+    #Rturn a list, where each list item is the next (movie_id, person_id) pair in the path from the source to the target.
+    # Each pair should be a tuple of two strings.
+
+    name = person_id_for_name(source)
+    neighbors = neighbors_for_person(target)
+    visited = set()
+    current_node = Node(state=source, parent=None, action=None)
+
+    queue.add(current_node)
+
+    while True:
+
+        if not queue.empty():
+            node_explored = queue.remove()
+
+            if node_explored not in visited:
+                visited.add(node_explored)
+                visited_order.append(node_explored)
+
+            ##for name_id, movie_id in neighbors_for_person(current_node.state):
+                #if name_id and movie_id not in visited:
+                   ## queue.add((name_id, movie_id))
+
+        return visited_order
+    ##elif isinstance(name, set):
+        ##print("Multiple people found")
+
+
+
+
+
+
+    '''queue = [v]
+    node_visited = set()
+    visited_order = []
+    while len(queue) > 0:
+        v = queue.pop(0)
+        if v not in node_visited:
+            while len(queue) > 0:(v)
+            node_visited.add(v)
+            visited_order.append(v)
+        for w in graph.neighbors(v):
+            if w not in node_visited:
+                queue.append(w)
+
+    return visited_order'''
+
+
 
 
 def person_id_for_name(name):

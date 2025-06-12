@@ -76,7 +76,7 @@ def checkColumn(board):
     return None
 
 
-#
+
 def checkLine(board):
     for row in range(3):
         if board[row][0] == board[row][1] == board[row][2] != EMPTY:
