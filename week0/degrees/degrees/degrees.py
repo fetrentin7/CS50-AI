@@ -1,6 +1,7 @@
 import csv
 import sys
 from operator import contains
+from sys import exception
 
 from numpy.matlib import empty
 
@@ -74,7 +75,7 @@ def main():
         sys.exit("Person not found.")
 
     path = shortest_path(source, target)
-    print(path)
+
 
     if path is None:
         print("Not connected.")
@@ -101,37 +102,35 @@ def shortest_path(source, target):
     queue = QueueFrontier()
 
     path = []
+
     start_node = Node(state=source, parent=None, action=None)
     queue.add(start_node)
     visited = set()
 
     while True:
 
-        if queue.empty():
-            print(" Empty queue")
+        if  queue.empty():
+            raise Exception("Empty queue")
 
+        node_explored = queue.remove()
 
-        elif not queue.empty():
-            node_explored = queue.remove()
-
-            if node_explored not in visited:
-                visited.add(node_explored.state)
+        if node_explored not in visited:
+            visited.add(node_explored.state)
 
             for movie_id, name_id in neighbors_for_person(node_explored.state):
                 if not queue.contains_state(name_id) and name_id not in visited:
                     new_node = Node(state=name_id, parent=node_explored, action=movie_id)
+
+                    if new_node.state == target:
+                        path = []
+                        node = node_explored
+                        while node is not None:
+                            path.append((node.action, node.state))
+                            node = node.parent
+                        path.reverse()
+                        return path
                     queue.add(new_node)
 
-
-            if node_explored.state == target:
-
-                node = node_explored
-                while node is not None:
-                    path.append((node.action, node.state))
-                    node = node.parent
-                path.reverse()
-                break
-    return path
 
 
 
