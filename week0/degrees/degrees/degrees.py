@@ -98,10 +98,7 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-
     queue = QueueFrontier()
-
-    path = []
 
     start_node = Node(state=source, parent=None, action=None)
     queue.add(start_node)
@@ -122,13 +119,13 @@ def shortest_path(source, target):
                     new_node = Node(state=name_id, parent=node_explored, action=movie_id)
 
                     if new_node.state == target:
-                        node = node_explored
-                        while node is not None:
-                            path.append((node.action, node.state))
-                            node = node.parent
+                        path = []
+                        while new_node.parent is not None:
+                            path.append((new_node.action, new_node.state))
+                            new_node = new_node.parent
                         path.reverse()
-                        break
-        return path
+                        return path
+                    queue.add(new_node)
 
 
 
