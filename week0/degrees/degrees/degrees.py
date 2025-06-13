@@ -1,5 +1,6 @@
 import csv
 import sys
+from operator import contains
 
 from numpy.matlib import empty
 
@@ -73,6 +74,7 @@ def main():
         sys.exit("Person not found.")
 
     path = shortest_path(source, target)
+    print(path)
 
     if path is None:
         print("Not connected.")
@@ -98,16 +100,10 @@ def shortest_path(source, target):
 
     queue = QueueFrontier()
 
-    visited_order = list()
-    #Rturn a list, where each list item is the next (movie_id, person_id) pair in the path from the source to the target.
-    # Each pair should be a tuple of two strings.
-
-    name = person_id_for_name(source)
-    neighbors = neighbors_for_person(target)
+    path = []
+    start_node = Node(state=source, parent=None, action=None)
+    queue.add(start_node)
     visited = set()
-    current_node = Node(state=source, parent=None, action=None)
-
-    queue.add(current_node)
 
     while True:
 
@@ -115,37 +111,23 @@ def shortest_path(source, target):
             node_explored = queue.remove()
 
             if node_explored not in visited:
-                visited.add(node_explored)
-                visited_order.append(node_explored)
+                visited.add(node_explored.state)
 
-            ##for name_id, movie_id in neighbors_for_person(current_node.state):
-                #if name_id and movie_id not in visited:
-                   ## queue.add((name_id, movie_id))
-
-        return visited_order
-    ##elif isinstance(name, set):
-        ##print("Multiple people found")
+            for movie_id, name_id in neighbors_for_person(node_explored.state):
+                if not queue.contains_state(name_id) and name_id not in visited:
+                    new_node = Node(state=name_id, parent=node_explored, action=movie_id)
+                    queue.add(new_node)
 
 
+            if node_explored.state == target:
 
+                node = node_explored
+                while node is not None:
+                    path.append((node.action, node.state))
+                    node = node.parent
+                path.reverse()
 
-
-
-    '''queue = [v]
-    node_visited = set()
-    visited_order = []
-    while len(queue) > 0:
-        v = queue.pop(0)
-        if v not in node_visited:
-            while len(queue) > 0:(v)
-            node_visited.add(v)
-            visited_order.append(v)
-        for w in graph.neighbors(v):
-            if w not in node_visited:
-                queue.append(w)
-
-    return visited_order'''
-
+            return path
 
 
 
