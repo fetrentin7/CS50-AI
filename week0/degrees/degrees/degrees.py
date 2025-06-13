@@ -101,6 +101,8 @@ def shortest_path(source, target):
 
     queue = QueueFrontier()
 
+    path = []
+
     start_node = Node(state=source, parent=None, action=None)
     queue.add(start_node)
     visited = set()
@@ -120,14 +122,14 @@ def shortest_path(source, target):
                     new_node = Node(state=name_id, parent=node_explored, action=movie_id)
 
                     if new_node.state == target:
-                        path = []
                         node = node_explored
                         while node is not None:
                             path.append((node.action, node.state))
                             node = node.parent
                         path.reverse()
-                        return path
-                    queue.add(new_node)
+                        break
+        return path
+
 
 
 
