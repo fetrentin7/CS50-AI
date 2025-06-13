@@ -98,20 +98,23 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
+
     queue = QueueFrontier()
 
     start_node = Node(state=source, parent=None, action=None)
     queue.add(start_node)
     visited = set()
+    if source == target:
+        return []
 
     while True:
 
-        if  queue.empty():
-            raise Exception("Empty queue")
+        if queue.empty():
+            return None
 
         node_explored = queue.remove()
 
-        if node_explored not in visited:
+        if node_explored.state not in visited:
             visited.add(node_explored.state)
 
             for movie_id, name_id in neighbors_for_person(node_explored.state):
@@ -126,7 +129,6 @@ def shortest_path(source, target):
                         path.reverse()
                         return path
                     queue.add(new_node)
-
 
 
 
