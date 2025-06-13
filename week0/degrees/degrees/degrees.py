@@ -101,8 +101,6 @@ def shortest_path(source, target):
 
     queue = QueueFrontier()
 
-    path = []
-
     start_node = Node(state=source, parent=None, action=None)
     queue.add(start_node)
     visited = set()
