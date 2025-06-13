@@ -107,7 +107,11 @@ def shortest_path(source, target):
 
     while True:
 
-        if not queue.empty():
+        if queue.empty():
+            print(" Empty queue")
+
+
+        elif not queue.empty():
             node_explored = queue.remove()
 
             if node_explored not in visited:
@@ -126,8 +130,8 @@ def shortest_path(source, target):
                     path.append((node.action, node.state))
                     node = node.parent
                 path.reverse()
-
-            return path
+                break
+    return path
 
 
 
