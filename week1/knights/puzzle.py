@@ -17,18 +17,31 @@ knowledge0 = And(
     Or(AKnight, AKnave),
     Not(And(AKnight, AKnave)),
 
-    Implication(Not(AKnight), Not(state)),
-    Implication(AKnight, state)
+    Implication(AKnight, state),
+    Implication(Not(AKnight), Not(state))
 
 )
 
 # Puzzle 1
 # A says "We are both knaves."
 # B says nothing.
-knowledge1 = And(
-    # TODO
-)
+state1 = And(AKnave, AKnight)
 
+knowledge1 = And(
+
+    Implication(AKnave, Not(AKnight)),
+    Not(And(AKnight, AKnave)),
+    Or(AKnight, AKnave),
+
+    Implication(AKnave, Not(state1)),
+
+    Not(And(BKnight, BKnave)),
+    Or(BKnight, BKnave)
+
+
+
+
+)
 # Puzzle 2
 # A says "We are the same kind."
 # B says "We are of different kinds."
