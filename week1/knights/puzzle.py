@@ -36,7 +36,7 @@ knowledge1 = And(
     Implication(AKnave, Not(state1)),
 
     Not(And(BKnight, BKnave)),
-    Or(BKnight, BKnave)
+    #Or(BKnight, BKnave)
 
 
 
