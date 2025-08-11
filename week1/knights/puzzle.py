@@ -68,7 +68,6 @@ knowledge2 = And(
 # B says "C is a knave."
 # C says "A is a knight."
 
-
 knowledge3 = And(
 
     Not(And(AKnight, AKnave)),
@@ -78,10 +77,10 @@ knowledge3 = And(
     Or(BKnight, BKnave),
     Or(CKnight, CKnave),
 
-    Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnight)),
+    #Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnight)),
 
-
-
+    Implication(AKnave, BKnight),
+    Implication(AKnight, BKnave),
 
     Implication(CKnave, BKnave),
     Implication(CKnight, BKnight),
