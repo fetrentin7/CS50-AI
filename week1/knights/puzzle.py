@@ -82,6 +82,7 @@ knowledge3 = And(
 
 
 
+
     Implication(CKnave, BKnave),
     Implication(CKnight, BKnight),
 
