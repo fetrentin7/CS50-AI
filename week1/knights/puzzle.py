@@ -67,10 +67,30 @@ knowledge2 = And(
 # B says "A said 'I am a knave'."
 # B says "C is a knave."
 # C says "A is a knight."
-knowledge3 = And(
-    # TODO
-)
 
+
+knowledge3 = And(
+
+    Not(And(AKnight, AKnave)),
+    Not(And(BKnight, BKnave)),
+    Not(And(CKnight, CKnave)),
+    Or(AKnight, AKnave),
+    Or(BKnight, BKnave),
+    Or(CKnight, CKnave),
+
+    Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnight)),
+
+
+
+    Implication(CKnave, BKnave),
+    Implication(CKnight, BKnight),
+
+    Implication(CKnight, AKnight),
+    Implication(CKnave, AKnave)
+
+
+
+)
 
 def main():
     symbols = [AKnight, AKnave, BKnight, BKnave, CKnight, CKnave]
