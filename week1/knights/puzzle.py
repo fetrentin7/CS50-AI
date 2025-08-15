@@ -68,6 +68,10 @@ knowledge2 = And(
 # B says "C is a knave."
 # C says "A is a knight."
 
+
+sentence = Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnave))
+
+
 knowledge3 = And(
 
     Not(And(AKnight, AKnave)),
@@ -77,19 +81,17 @@ knowledge3 = And(
     Or(BKnight, BKnave),
     Or(CKnight, CKnave),
 
+    Implication(AKnight, sentence),
+    Implication(AKnave, Not(sentence)),
 
-    Implication(AKnave, BKnight),
-    Implication(AKnight, BKnave),
+
 
     Implication(CKnave, BKnave),
     Implication(CKnight, BKnight),
 
     Implication(CKnight, AKnight),
-    Implication(CKnave, AKnave),
-
-    
-
-)
+    Implication(CKnave, AKnave)
+)           
 
 def main():
     symbols = [AKnight, AKnave, BKnight, BKnave, CKnight, CKnave]
