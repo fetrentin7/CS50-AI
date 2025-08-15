@@ -46,7 +46,6 @@ while True:
         pygame.draw.rect(screen, white, playXButton)
         screen.blit(playX, playXRect)
 
-
         playOButton = pygame.Rect(5 * (width / 8), (height / 2), width / 4, 50)
         playO = mediumFont.render("Play as O", True, black)
         playORect = playO.get_rect()

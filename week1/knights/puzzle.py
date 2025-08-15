@@ -77,7 +77,6 @@ knowledge3 = And(
     Or(BKnight, BKnave),
     Or(CKnight, CKnave),
 
-    #Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnight)),
 
     Implication(AKnave, BKnight),
     Implication(AKnight, BKnave),
@@ -86,9 +85,9 @@ knowledge3 = And(
     Implication(CKnight, BKnight),
 
     Implication(CKnight, AKnight),
-    Implication(CKnave, AKnave)
+    Implication(CKnave, AKnave),
 
-
+    
 
 )
 
