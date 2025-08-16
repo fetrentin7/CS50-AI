@@ -70,7 +70,7 @@ knowledge2 = And(
 
 
 sentence = Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnave))
-
+sentence1 = And(AKnave, Not(AKnave))
 
 knowledge3 = And(
 
@@ -84,7 +84,8 @@ knowledge3 = And(
     Implication(AKnight, sentence),
     Implication(AKnave, Not(sentence)),
 
-
+    Implication(BKnave, Not(sentence1)),
+    Implication(BKnight, sentence1),
 
     Implication(CKnave, BKnave),
     Implication(CKnight, BKnight),
