@@ -69,8 +69,12 @@ knowledge2 = And(
 # C says "A is a knight."
 
 
-sentence = Or(And(AKnight, Not(AKnave)), And(Not(AKnight), AKnave))
+sentence = Or(AKnight, AKnave)
 sentence1 = And(AKnave, Not(AKnave))
+
+sentenceB1 = AKnave
+sentenceB2 = CKnave
+sentenceC = AKnight
 
 knowledge3 = And(
 
@@ -84,14 +88,12 @@ knowledge3 = And(
     Implication(AKnight, sentence),
     Implication(AKnave, Not(sentence)),
 
-    Implication(BKnave, Not(sentence1)),
-    Implication(BKnight, sentence1),
+    Implication(BKnight, And(sentenceB1, sentenceB2)),
+    Implication(BKnave, Not(And(sentenceB1, sentenceB2))),
 
-    Implication(CKnave, BKnave),
-    Implication(CKnight, BKnight),
 
-    Implication(CKnight, AKnight),
-    Implication(CKnave, AKnave)
+    Implication(CKnight, sentenceC),
+    Implication(CKnave, Not(sentenceC))
 )           
 
 def main():
