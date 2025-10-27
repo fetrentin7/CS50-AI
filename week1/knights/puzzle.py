@@ -70,7 +70,6 @@ knowledge2 = And(
 
 
 sentence = Or(AKnight, AKnave)
-sentence1 = And(AKnave, Not(AKnave))
 
 sentenceB1 = AKnave
 sentenceB2 = CKnave
