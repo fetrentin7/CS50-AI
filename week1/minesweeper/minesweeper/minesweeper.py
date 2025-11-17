@@ -108,7 +108,7 @@ class Sentence():
         mines = set()
         for cell in self.cells:
 
-            if self.count == len(self.cells): #number of existing mines
+            if self.count == len(self.cells): #number of existing mines == number of cells
                 mines.add(cell)
         return mines
 
@@ -117,7 +117,8 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        raise NotImplementedError
+        safe_mine = set()
+        
 
     def mark_mine(self, cell):
         """
