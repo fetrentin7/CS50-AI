@@ -119,7 +119,10 @@ class Sentence():
         """
         safe_mine = set()
         
-
+        for cell in self.cells:
+            if self.count == 0:
+                safe_mine.add(cell)
+        return safe_mine
     def mark_mine(self, cell):
         """
         Updates internal knowledge representation given the fact that
