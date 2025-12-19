@@ -105,25 +105,22 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        mines = set()
-        for cell in self.cells:
 
-            if self.count == len(self.cells): #number of existing mines == number of cells
-                mines.add(cell)
-        return mines
+        if self.count == len(self.cell) and self.count != 0: #number of existing mines == number of cells
+           return self.cell
 
-        
+        return set()        
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        safe_mine = set()
-        
-        for cell in self.cells:
-            if self.count == 0:
-                safe_mine.add(cell)
-        return safe_mine
+
+        if self.count == 0:
+            print("Safe")
+            return self.cells
+        return set()
     
+
     def mark_mine(self, cell):
         """
         Updates internal knowledge representation given the fact that
@@ -131,18 +128,14 @@ class Sentence():
         """
 
         #check if the cell is in the set of known mines. 
-        if cell in self.cells:
-            self.cells.remove(cell)
-            self.count -= 1
-
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
+
         
-        raise NotImplementedError
 
 
 class MinesweeperAI():
