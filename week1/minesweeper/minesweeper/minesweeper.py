@@ -105,8 +105,8 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        if self.count == len(self.cell) and self.count != 0: #number of existing mines == number of cells
-           return self.cell
+        if  self.count == len(self.cells): #number of existing mines == number of cells
+           return self.cells
 
         return set()        
     
@@ -129,6 +129,7 @@ class Sentence():
         """
 
         #check if the cell is in the set of known mines. 
+       
         if cell in self.cells:
             self.cells.remove(cell)
             self.count -= 1
@@ -146,8 +147,6 @@ class Sentence():
             return
 
         
-
-
 class MinesweeperAI():
     """
     Minesweeper game player
