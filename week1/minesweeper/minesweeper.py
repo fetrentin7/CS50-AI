@@ -114,7 +114,6 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-
         if self.count == 0:
             print("Safe")
             return self.cells
@@ -134,7 +133,7 @@ class Sentence():
             self.cells.remove(cell)
             self.count -= 1
         else:
-            self.count = 0
+            return
 
     def mark_safe(self, cell):
         """
@@ -142,7 +141,7 @@ class Sentence():
         a cell is known to be safe.
         """
         if cell in self.cells:
-            self.cells.add(cell)
+            self.cells.remove(cell)
         else:
             return
 
@@ -201,6 +200,8 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
+
+        move = (i,j)        
         raise NotImplementedError
 
     def make_safe_move(self):
