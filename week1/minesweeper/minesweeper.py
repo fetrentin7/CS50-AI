@@ -200,15 +200,16 @@ class MinesweeperAI():
                if they can be inferred from existing knowledge
         """
 
-        
         self.moves_made.add(cell)
         self.safes.add(cell)
 
         neighboring_cell = set()
-        mine_count = 0
-        for cell in self.knowledge:
-            
-      
+        count_mine = 0
+
+        new_sentence = Sentence(neighboring_cell, count_mine)
+        self.knowledge.append(new_sentence)
+
+        
 
     def make_safe_move(self):
         """
