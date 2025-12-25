@@ -208,13 +208,14 @@ class MinesweeperAI():
 
         new_sentence = Sentence(neighboring_cell, count_mine)
         self.knowledge.append(new_sentence)
+ 
+        for sentence in self.knowledge:
+            for cell in new_sentence.cells:
 
-        for marked_cell in self.knowledge:
-            for cell in marked_cell.cells:
-                if count_mine == 0 or count_mine == len(new_sentence.cells):
-                    self.safes.add(marked_cell)
+                if sentence == len(new_sentence.count) and count_mine == 0:
+                    new_sentence.mark_safe(cell)
 
-        
+            
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
