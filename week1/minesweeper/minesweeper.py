@@ -114,8 +114,7 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        if self.count == 0:
-            print("Safe")
+        if self.count == 0: #safe when there is no mine in the safe cell
             return self.cells
         
         return set()
@@ -131,7 +130,7 @@ class Sentence():
        
         if cell in self.cells:
             self.cells.remove(cell)
-            self.count -= 1
+            self.count -= 1 #decrease the number of mines, since it's in the set
         else:
             return
 
@@ -141,7 +140,7 @@ class Sentence():
         a cell is known to be safe.
         """
         if cell in self.cells:
-            self.cells.remove(cell)
+            self.cells.remove(cell) #when marked safe, not a mine
         else:
             return
 
@@ -201,8 +200,15 @@ class MinesweeperAI():
                if they can be inferred from existing knowledge
         """
 
-        move = (i,j)        
-        raise NotImplementedError
+        
+        self.moves_made.add(cell)
+        self.safes.add(cell)
+
+        neighboring_cell = set()
+        mine_count = 0
+        for cell in self.knowledge:
+            
+      
 
     def make_safe_move(self):
         """
