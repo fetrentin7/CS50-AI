@@ -216,18 +216,21 @@ class MinesweeperAI():
                 coordinates = (i,j)
                 if coordinates == cell:
                     continue
-                if i < 0 or i >= self.width or j >= self.height or j < 0: #checking boundaries
+                if i >= 0 or i < self.width or j < self.height or j >= 0: #checking boundaries
                     continue
                         
                 if coordinates in self.mines:
                     count_mine += 1
+                    print("Mines at: ", coordinates)
                 
                 if coordinates not in self.safes:
                     neighboring_cell.add(coordinates)
+                    print("Safe mines at: ", coordinates)
+
 
         new_sentence.cells = neighboring_cell
         counter_track = count - count_mine
-        
+
         if counter_track == len(self.mines):
             self.mark_mine(new_sentence.cells)
         
