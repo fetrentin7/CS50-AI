@@ -223,8 +223,11 @@ class MinesweeperAI():
                     self.mark_mine(coordinates)
                     count_mine += 1
                 
-                if coordinates in self.safes:
-                    self.mark_safe(coordinates)
+                if coordinates not in self.safes:
+                    neighboring_cell.add(coordinates)
+
+                counter_track = count - count_mine
+
 
     def make_safe_move(self):
         """
