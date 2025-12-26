@@ -1,6 +1,6 @@
 import itertools
 import random
-
+import copy
 
 class Minesweeper():
     """
@@ -208,14 +208,24 @@ class MinesweeperAI():
 
         new_sentence = Sentence(neighboring_cell, count_mine)
         self.knowledge.append(new_sentence)
- 
-        for sentence in self.knowledge:
-            for cell in new_sentence.cells:
 
-                if sentence == len(new_sentence.count) and count_mine == 0:
-                    new_sentence.mark_safe(cell)
+        #add the sentence to the knowlege base based on the value of cell
+        
+        for i in range(cell[0] - 1, cell[0] + 2): #given the coordinates (i,j) (i-1,i,i+1) (j, j-1, j+1)
+            for j in range(cell[1] - 1, cell[1] + 2):
+                coordinates = (i,j)
+                if coordinates == cell:
+                    continue
+                if i < 0 or i >= self.width or j >= self.height or j < 0: #checking boundaries
+                    continue
+                        
+                if coordinates  in self.mines:
+                    self.mark_mine(coordinates)
+                    count_mine += 1
+                
+                if coordinates in self.safes:
+                    self.mark_safe(coordinates)
 
-            
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -235,3 +245,4 @@ class MinesweeperAI():
             2) are not known to be mines
         """
         raise NotImplementedError
+ 
