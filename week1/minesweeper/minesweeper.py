@@ -214,11 +214,11 @@ class MinesweeperAI():
         for i in range(cell[0] - 1, cell[0] + 2): #given the coordinates (i,j) (i-1,i,i+1) (j-1, j, j+1), rrange does not stop at (i,j))
             for j in range(cell[1] - 1, cell[1] + 2):
                 coordinates = (i,j)
-                if coordinates == cell:
-                    continue
-                if i >= 0 or i < self.width or j < self.height or j >= 0: #checking boundaries
-                    continue
-                        
+     
+                if 0 <= i < self.width and 0 <= j < self.height : #checking boundaries
+                    if (i,j) == cell:
+                        continue
+
                 if coordinates in self.mines:
                     count_mine += 1
                     print("Mines at: ", coordinates)
