@@ -202,42 +202,65 @@ class MinesweeperAI():
 
         self.moves_made.add(cell)
         self.safes.add(cell)
-
         neighboring_cell = set()
         count_mine = 0
 
-        new_sentence = Sentence(neighboring_cell, count_mine)
-        self.knowledge.append(new_sentence)
-
-        #add the sentence to the knowlege base based on the value of cell
+        #loop through the cell to later add into the knowlege base
         
         for i in range(cell[0] - 1, cell[0] + 2): #given the coordinates (i,j) (i-1,i,i+1) (j-1, j, j+1), rrange does not stop at (i,j))
             for j in range(cell[1] - 1, cell[1] + 2):
-                coordinates = (i,j)
-     
-                if 0 <= i < self.width and 0 <= j < self.height : #checking boundaries
-                    if (i,j) == cell:
+                
+               #checking boundaries
+                if (i,j) == cell:
+                    continue 
+                
+                if 0 <= i < self.height and 0 <= j < self.width:
+                    if (i,j) in self.mines:
+                        count_mine += 1
                         continue
 
-                if coordinates in self.mines:
-                    count_mine += 1
-                    print("Mines at: ", coordinates)
+                    if (i,j) in self.safes:
+                        count_mine = 0
+                        continue
+
+                    if (i,j) not in self.safes and (i,j) not in self.mines:
+                        neighboring_cell.add((i,j)) #adding unknown cells, don't know which
+
+        
+        counter_track = count - count_mine #number of mines in the unknown cell
+        #creating sentence
+        new_sentence = Sentence(neighboring_cell, counter_track)
+        
+        if len(neighboring_cell) > 0:
+            self.knowledge.append(new_sentence)
+
+        #marking cells as additional safes or mines
+
+
+        #sentences = Sentence()
+
+        for sentence in self.knowledge:
+            sentence_safe = sentence.known_safes()
+            sentence_mine = sentence.known_mines()
+
+            if len(sentence_safe) > 0 :
+                for safe in sentence_safe:
+                    self.mark_safe(safe)
+                        
+            
+            if len(sentence_mine) > 0:
+                for mine in sentence_mine:
+                    self.mark_mine(mine)
+
                 
-                if coordinates not in self.safes:
-                    neighboring_cell.add(coordinates)
-                    print("Safe mines at: ", coordinates)
-
-
-        new_sentence.cells = neighboring_cell
-        counter_track = count - count_mine
-
-        if counter_track == len(self.mines):
-            self.mark_mine(new_sentence.cells)
-        
-        if counter_track == 0:
-            self.mark_mine(new_sentence.cells)
-        
-
+      #for sentence in self.knowledge:
+      #    if len(sentence.cell) == sentence.count:
+      #        for i in sentence.cell:
+      #            self.mark_mine(i)
+      #    
+      #    if sentence.count == 0:
+      #        for j in sentence.cell:
+      #            self.mark_safe(j)
 
     def make_safe_move(self):
         """
@@ -247,8 +270,13 @@ class MinesweeperAI():
 
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
+
         """
-        raise NotImplementedError
+        for cell in self.safes:
+            if cell not in self.moves_made:
+                return cell
+        
+        return None
 
     def make_random_move(self):
         """
@@ -257,5 +285,13 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        raise NotImplementedError
- 
+        moves = []
+
+        for i in range(self.height):
+            for j in range(self.width):
+                if (i,j) not in self.moves_made and (i,j) not in self.mines:
+                    moves.append((i,j))
+
+        if len(moves) != 0:
+            return random.choice(moves)
+        return None
