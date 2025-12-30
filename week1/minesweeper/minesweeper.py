@@ -235,32 +235,53 @@ class MinesweeperAI():
             self.knowledge.append(new_sentence)
 
         #marking cells as additional safes or mines
-
-
-        #sentences = Sentence()
-
+        safes = set()
+        mines = set()
         for sentence in self.knowledge:
-            sentence_safe = sentence.known_safes()
-            sentence_mine = sentence.known_mines()
+            sentence_safe =  safes.union(sentence.known_safes())
+            sentence_mine = mines.union(sentence.known_mines())
+
+            if sentence_safe and sentence_mine == 0:
+                continue
 
             if len(sentence_safe) > 0 :
                 for safe in sentence_safe:
                     self.mark_safe(safe)
                         
-            
             if len(sentence_mine) > 0:
                 for mine in sentence_mine:
                     self.mark_mine(mine)
 
+        #adding new sentences to the ai
+        sentences = []
+        for sentence2 in self.knowledge:
+            for sentence3 in self.knowledge:
+                 #check if A is a subset of B
+                if sentence2 == sentence3:
+                    continue
                 
-      #for sentence in self.knowledge:
-      #    if len(sentence.cell) == sentence.count:
-      #        for i in sentence.cell:
-      #            self.mark_mine(i)
-      #    
-      #    if sentence.count == 0:
-      #        for j in sentence.cell:
-      #            self.mark_safe(j)
+                print(type(sentence3.cells))
+                print(type(sentence2.cells))
+                if sentence3.cells.issubset(sentence2.cells):
+                    cells_diff =  sentence2.cells - sentence3.cells
+                    count_diff =  sentence2.count - sentence3.count
+
+                    if len(cells_diff) > 0:
+                            sentence_cell =  Sentence(cells_diff, count_diff)
+                            sentences.append(sentence_cell)
+
+                elif sentence2.cells.issubset(sentence3.cells):
+                    cells_diff2 =  sentence3.cells - sentence2.cells
+                    count_diff2 =  sentence3.count - sentence2.count         
+
+                    
+                    if len(cells_diff2) > 0:
+                            sentence_cell2 =  Sentence(cells_diff2, count_diff2)
+                            sentences.append(sentence_cell2)
+
+                for sent in sentences:
+                    if sent not in self.knowledge:
+                        self.knowledge.append(sent) #adding sentnece to knowlegde base
 
     def make_safe_move(self):
         """
