@@ -220,7 +220,6 @@ class MinesweeperAI():
                         continue
 
                     if (i,j) in self.safes:
-                        count_mine = 0
                         continue
 
                     if (i,j) not in self.safes and (i,j) not in self.mines:
@@ -234,55 +233,71 @@ class MinesweeperAI():
         if len(neighboring_cell) > 0:
             self.knowledge.append(new_sentence)
 
-        #marking cells as additional safes or mines
+        #marking cells as additional safes or mines   if they can be inferred from existing knowledge
+
         safes = set()
         mines = set()
-        for sentence in self.knowledge:
-            sentence_safe =  safes.union(sentence.known_safes())
-            sentence_mine = mines.union(sentence.known_mines())
+        state = True
 
-            if sentence_safe and sentence_mine == 0:
-                continue
+        while state:
+            state = False
 
-            if len(sentence_safe) > 0 :
-                for safe in sentence_safe:
-                    self.mark_safe(safe)
-                        
-            if len(sentence_mine) > 0:
-                for mine in sentence_mine:
-                    self.mark_mine(mine)
-
-        #adding new sentences to the ai
-        sentences = []
-        for sentence2 in self.knowledge:
-            for sentence3 in self.knowledge:
-                 #check if A is a subset of B
-                if sentence2 == sentence3:
-                    continue
+            for sentence in self.knowledge:
+                known_safe = sentence.known_safes()
+                known_mine = sentence.known_mines()
                 
-                print(type(sentence3.cells))
-                print(type(sentence2.cells))
-                if sentence3.cells.issubset(sentence2.cells):
-                    cells_diff =  sentence2.cells - sentence3.cells
-                    count_diff =  sentence2.count - sentence3.count
+                sentence_safe = safes.union(known_safe)
+                sentence_mine = mines.union(known_mine)
 
-                    if len(cells_diff) > 0:
-                            sentence_cell =  Sentence(cells_diff, count_diff)
-                            sentences.append(sentence_cell)
+                if len(sentence_safe) > 0 :
 
-                elif sentence2.cells.issubset(sentence3.cells):
-                    cells_diff2 =  sentence3.cells - sentence2.cells
-                    count_diff2 =  sentence3.count - sentence2.count         
+                    for safe in known_safe.copy():
+                        if safe not in self.safes:
+                            self.mark_safe(safe)
+                            state = True
+                            
+                if len(sentence_mine) > 0:
+                    for mine in known_mine.copy():
+                        if mine not in self.mines:
+                            self.mark_mine(mine)
+                            state = True
+ 
+        #adding new sentences to the ai, if they can be inferred from existing knowledge
+            sentences = []
+            for sentence2 in self.knowledge:
+                for sentence3 in self.knowledge:
+                    #check if A is a subset of B
+                    if sentence2 == sentence3:
+                        continue
 
-                    
-                    if len(cells_diff2) > 0:
-                            sentence_cell2 =  Sentence(cells_diff2, count_diff2)
-                            sentences.append(sentence_cell2)
+                    #print(type(sentence3.cells))
+                    #print(type(sentence2.cells))
+                    elif sentence3.cells.issubset(sentence2.cells): #sentence 2 > sentence 1
+                        cells_diff = sentence2.cells - sentence3.cells
+                        count_diff = sentence2.count - sentence3.count
+                   
+                        if len(cells_diff) > 0:
+                                sentence_cell =  Sentence(cells_diff, count_diff)
+                                sentences.append(sentence_cell)
 
-                for sent in sentences:
-                    if sent not in self.knowledge:
-                        self.knowledge.append(sent) #adding sentnece to knowlegde base
+                    elif sentence2.cells.issubset(sentence3.cells):
+                        cells_diff2 = sentence3.cells - sentence2.cells
+                        count_diff2 = sentence3.count - sentence2.count         
 
+                        if len(cells_diff2) > 0:
+                                sentence_cell2 =  Sentence(cells_diff2, count_diff2)
+                                sentences.append(sentence_cell2)
+
+            for sent in sentences:
+                if sent not in self.knowledge:
+                    if sent.count < 0:
+                        continue
+                    if sent.count > len(sent.cells):
+                        continue
+
+                    self.knowledge.append(sent) #adding sentnece to knowlegde base
+                    state = True
+        
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -296,7 +311,7 @@ class MinesweeperAI():
         for cell in self.safes:
             if cell not in self.moves_made:
                 return cell
-        
+            
         return None
 
     def make_random_move(self):
@@ -315,4 +330,5 @@ class MinesweeperAI():
 
         if len(moves) != 0:
             return random.choice(moves)
+
         return None
