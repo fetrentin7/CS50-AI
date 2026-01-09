@@ -59,19 +59,24 @@ def transition_model(corpus, page, damping_factor):
     """
 
     dictionary = {}
-    sum = 0  # sum must be equal to one
-    # Each key should be mapped to a value representing the probability that a random surfer would choose that page next.
 
+    #Page 1: {Page2, Page3}, e corpus is a dictionary where each key is a page, 
+    # and the value is a set of pages that the key page links to. So, the neighbors of a page are the pages in its value set.
 
-    for key, value in corpus:
-        if 0 <= damping_factor <= 1:
-           #dictionary[value] = 1 - damping_factor
+    link_pages = len(corpus[page])
 
-           #if key == page:
-            #   dictionary.update(key, value)
-
+    if link_pages:
         
+        for linked in corpus[page]:
+            dictionary[linked] += damping_factor/link_pages
 
+        for linked in corpus:
+            dictionary[linked] = (1-damping_factor)/len(corpus)
+        
+    else:
+        for linked in corpus:
+            dictionary[linked] = link_pages / len(corpus)
+    return dictionary
 
 def sample_pagerank(corpus, damping_factor, n):
     """
