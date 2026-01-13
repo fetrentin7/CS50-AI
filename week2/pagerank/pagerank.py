@@ -10,15 +10,18 @@ SAMPLES = 10000
 def main():
     if len(sys.argv) != 2:
         sys.exit("Usage: python pagerank.py corpus")
+        
     corpus = crawl(sys.argv[1])
-    ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
-    print(f"PageRank Results from Sampling (n = {SAMPLES})")
-    for page in sorted(ranks):
-        print(f"  {page}: {ranks[page]:.4f}")
-    ranks = iterate_pagerank(corpus, DAMPING)
-    print(f"PageRank Results from Iteration")
-    for page in sorted(ranks):
-        print(f"  {page}: {ranks[page]:.4f}")
+    #ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
+    print(transition_model(corpus, list(corpus.keys())[0], DAMPING))
+
+# print(f"PageRank Results from Sampling (n = {SAMPLES})")
+# for page in sorted(ranks):
+#     print(f"  {page}: {ranks[page]:.4f}")
+# ranks = iterate_pagerank(corpus, DAMPING)
+# print(f"PageRank Results from Iteration")
+# for page in sorted(ranks):
+#     print(f"  {page}: {ranks[page]:.4f}")
 
 
 def crawl(directory):
@@ -58,25 +61,24 @@ def transition_model(corpus, page, damping_factor):
     a link at random chosen from all pages in the corpus.
     """
 
-    dictionary = {}
+    #dictionary representing the probability distribution over which page a random surfer would visit next
+    probab_distribution = {}
+    
+    number_links = len(corpus[page])
 
-    #Page 1: {Page2, Page3}, e corpus is a dictionary where each key is a page, 
-    # and the value is a set of pages that the key page links to. So, the neighbors of a page are the pages in its value set.
 
-    link_pages = len(corpus[page])
-
-    if link_pages:
+    if number_links:
         
-        for linked in corpus[page]:
-            dictionary[linked] += damping_factor/link_pages
-
         for linked in corpus:
-            dictionary[linked] = (1-damping_factor)/len(corpus)
-        
+            probab_distribution[linked] = (1-damping_factor)/len(corpus)  #choosing one of the pages
+        for linked in corpus[page]: 
+            probab_distribution[linked] += damping_factor/number_links #choosing one of the llinks 
+
     else:
-        for linked in corpus:
-            dictionary[linked] = link_pages / len(corpus)
-    return dictionary
+        for linked in corpus: 
+            probab_distribution[linked] = (1/len(corpus))
+
+    return probab_distribution
 
 def sample_pagerank(corpus, damping_factor, n):
     """
@@ -87,8 +89,8 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
 
+    raise NotImplementedError
 
 def iterate_pagerank(corpus, damping_factor):
     """
