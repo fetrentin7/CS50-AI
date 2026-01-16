@@ -4,7 +4,7 @@ import re
 import sys
 
 DAMPING = 0.85
-SAMPLES = 10000
+SAMPLES = 100
 
 
 def main():
@@ -12,18 +12,16 @@ def main():
         sys.exit("Usage: python pagerank.py corpus")
         
     corpus = crawl(sys.argv[1])
-    #ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
-    print(transition_model(corpus, list(corpus.keys())[0], DAMPING))
+    ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
+    #print(transition_model(corpus, list(corpus.keys())[0], DAMPING))
 
-# print(f"PageRank Results from Sampling (n = {SAMPLES})")
-# for page in sorted(ranks):
-#     print(f"  {page}: {ranks[page]:.4f}")
-# ranks = iterate_pagerank(corpus, DAMPING)
-# print(f"PageRank Results from Iteration")
-# for page in sorted(ranks):
-#     print(f"  {page}: {ranks[page]:.4f}")
-
-
+    print(f"PageRank Results from Sampling (n = {SAMPLES})")
+    for page in sorted(ranks):
+        print(f"  {page}: {ranks[page]:.4f}")
+    #ranks = iterate_pagerank(corpus, DAMPING)
+    #print(f"PageRank Results from Iteration")
+    #for page in sorted(ranks):
+   #     print(f"  {page}: {ranks[page]:.4f}")  
 def crawl(directory):
     """
     Parse a directory of HTML pages and check for links to other pages.
@@ -66,7 +64,9 @@ def transition_model(corpus, page, damping_factor):
     
     number_links = len(corpus[page])
 
-
+    for page in corpus:
+        probab_distribution[page] = 0
+    
     if number_links:
         
         for linked in corpus:
@@ -90,7 +90,24 @@ def sample_pagerank(corpus, damping_factor, n):
     PageRank values should sum to 1.
     """
 
-    raise NotImplementedError
+    dictionary = {}
+
+ 
+    page = random.choice(list(corpus.keys()))
+    sample = transition_model(corpus, page, damping_factor)
+
+    for i in corpus:
+        dictionary[i] = 0
+
+    for i in range(1, n):
+        dictionary[page] += 1
+        next_page = random.choices(list(corpus.keys()), weights=sample.values(), k=1) 
+        page = next_page[0] 
+        
+    for page in dictionary:
+        dictionary[page] = dictionary[page]/n
+
+    return dictionary
 
 def iterate_pagerank(corpus, damping_factor):
     """
@@ -101,6 +118,8 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
+
+    
     raise NotImplementedError
 
 
