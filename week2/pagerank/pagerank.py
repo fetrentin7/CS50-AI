@@ -122,24 +122,30 @@ def iterate_pagerank(corpus, damping_factor):
     N = len(page_list) #assing N to a total number of pages in corpus
     page_rank = 1/N
 
-    converges = True
     for page in corpus:
         dictionary[page] = page_rank
 
-    while not converges:
-        new_rank = {}
-        for page2 in corpus: 
-            #if page has zero links
-            if len(corpus[page]) == 0:
-                current = new_rank[page2] 
-                new_pagerank = (1-damping_factor)/len(corpus)
-                
+    max = page_rank
+    while max > 0.001:
 
+        max = 0
+        surfer_random = (1-damping_factor)/N
 
+        for next_page in corpus: 
+            for page in corpus[next_page]:
 
-            new_pagerank += (dictionary[new_pagerank]/len(page_list)) * damping_factor
-                
-            current = new_rank[new_pagerank]
+                #if page has no links
+                if len(corpus[next_page]) == 0:
+                    surfer_link = page_rank
+                    
+                if page in corpus[next_page]:
+                    surfer_link += (dictionary[next_page]/len(corpus[next_page])) * damping_factor
+
+            new_pagerank = surfer_random + surfer_link
+            dictionary[page] = new_pagerank
+
+        
+
         
 
     return dictionary
