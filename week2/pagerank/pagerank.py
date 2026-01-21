@@ -116,15 +116,6 @@ def iterate_pagerank(corpus, damping_factor):
     Return PageRank values for each page by iteratively updating
     PageRank values until convergence.
 
-    Return a dictionary where keys are page names, and values are
-    their estimated PageRank value (a value between 0 and 1). All
-    PageRank values should sum to 1.
-"""
-def iterate_pagerank(corpus, damping_factor):
-    """
-    Return PageRank values for each page by iteratively updating
-    PageRank values until convergence.
-
       Return PageRank values for each page by iteratively updating
     PageRank values until convergence.
 
@@ -150,19 +141,19 @@ def iterate_pagerank(corpus, damping_factor):
             sum_links = 0
 
             for page in corpus:
-                if len(corpus[page]) > 0:
+                if len(corpus[page]) > 0: #if there is a link
                     if next_page in corpus[page]:
                         sum_links += starter_rank[page]/len(corpus[page])
-
                 else:
-                    sum_links += starter_rank[page]/N
+                    sum_links += starter_rank[page]/N #A page that has no links being interpreted as having one link for every page in the corpus
 
-            rank_val += sum_links * damping_factor
+            rank_val = rank_val + (sum_links * damping_factor) 
             new_rank[next_page] = rank_val
 
+        #convergence
         for page in corpus:
-            diff = abs(new_rank[page] - starter_rank[page])
-            if(diff > max_diff):
+            diff = abs(new_rank[page] - starter_rank[page]) # iterating until the changes between pagerank values are minimal
+            if(diff > max_diff): 
                 max_diff = diff
 
         starter_rank = new_rank.copy()
