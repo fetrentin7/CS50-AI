@@ -61,24 +61,27 @@ def transition_model(corpus, page, damping_factor):
 
     #dictionary representing the probability distribution over which page a random surfer would visit next
     probab_distribution = {}
-    
-    number_links = len(corpus[page])
 
-    for page in corpus:
-        probab_distribution[page] = 0
-    
-    if number_links:
-        
+    number_links = len(corpus[page])
+    number_pages = len(corpus)
+    for linked in corpus:
+        probab_distribution[linked] = 0
+
+    if number_links > 0:
+
         for linked in corpus:
-            probab_distribution[linked] = (1-damping_factor)/len(corpus)  #choosing one of the pages
-        for linked in corpus[page]: 
-            probab_distribution[linked] += damping_factor/number_links #choosing one of the llinks 
+            probab_distribution[linked] = (1-damping_factor)/number_pages #choosing one of the pages
+
+        for linked in corpus[page]:
+            probab_distribution[linked] += damping_factor/number_links #choosing one of the llinks
 
     else:
-        for linked in corpus: 
-            probab_distribution[linked] = (1/len(corpus))
+
+        for linked in corpus:
+            probab_distribution[linked] = 1/number_pages
 
     return probab_distribution
+
 
 def sample_pagerank(corpus, damping_factor, n):
     """
@@ -92,16 +95,17 @@ def sample_pagerank(corpus, damping_factor, n):
 
     dictionary = {}
     page = random.choice(list(corpus.keys()))
-    sample = transition_model(corpus, page, damping_factor)
+
 
     for i in corpus:
         dictionary[i] = 0
 
     for i in range(1, n):
         dictionary[page] += 1
-        next_page = random.choices(list(corpus.keys()), weights=sample.values(), k=1) 
-        page = next_page[0] 
-        
+        sample = transition_model(corpus, page, damping_factor)
+        next_page = random.choices(list(corpus.keys()), weights=sample.values(), k=1)
+        page = next_page[0]
+
     for page in dictionary:
         dictionary[page] = dictionary[page]/n
 
@@ -115,39 +119,60 @@ def iterate_pagerank(corpus, damping_factor):
     Return a dictionary where keys are page names, and values are
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
+"""
+def iterate_pagerank(corpus, damping_factor):
     """
-    dictionary = {}
-    
+    Return PageRank values for each page by iteratively updating
+    PageRank values until convergence.
+
+      Return PageRank values for each page by iteratively updating
+    PageRank values until convergence.
+
+    Return a dictionary where keys are page names, and values are
+    their estimated PageRank value (a value between 0 and 1). All
+    PageRank values should sum to 1.
+    """
+    starter_rank = {}
+
     page_list = list(corpus.keys())
     N = len(page_list) #assing N to a total number of pages in corpus
     page_rank = 1/N
 
     for page in corpus:
-        dictionary[page] = page_rank
+        starter_rank[page] = page_rank
 
-    max = page_rank
-    while max > 0.001:
+    while True:
+        new_rank = {}
+        max_diff = 0
+        for next_page in corpus:
 
-        max = 0
-        surfer_random = (1-damping_factor)/N
+            rank_val = (1-damping_factor)/N
+            sum_links = 0
 
-        for next_page in corpus: 
-            for page in corpus[next_page]:
+            for page in corpus:
+                if len(corpus[page]) > 0:
+                    if next_page in corpus[page]:
+                        sum_links += starter_rank[page]/len(corpus[page])
 
-                #if page has no links
-                if len(corpus[next_page]) == 0:
-                    surfer_link = page_rank
-                    
-                if page in corpus[next_page]:
-                    surfer_link += (dictionary[next_page]/len(corpus[next_page])) * damping_factor
+                else:
+                    sum_links += starter_rank[page]/N
 
-            new_pagerank = surfer_random + surfer_link
-            dictionary[page] = new_pagerank
+            rank_val += sum_links * damping_factor
+            new_rank[next_page] = rank_val
 
-        
+        for page in corpus:
+            diff = abs(new_rank[page] - starter_rank[page])
+            if(diff > max_diff):
+                max_diff = diff
 
-        
+        starter_rank = new_rank.copy()
 
-    return dictionary
+        if max_diff < 0.001:
+            break
+
+    return starter_rank
+
+
 if __name__ == "__main__":
     main()
+
