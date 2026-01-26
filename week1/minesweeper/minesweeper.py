@@ -262,7 +262,7 @@ class MinesweeperAI():
                             self.mark_mine(mine)
                             state = True
  
-        #adding new sentences to the ai, if they can be inferred from existing knowledge
+            #adding new sentences to the ai, if they can be inferred from existing knowledge
             sentences = []
             for sentence2 in self.knowledge:
                 for sentence3 in self.knowledge:
